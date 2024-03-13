@@ -13,10 +13,18 @@
 //
 // No hints this time ;)
 
-// I AM NOT DONE
+
 
 // Put your function here!
-// fn calculate_price_of_apples {
+fn calculate_price_of_apples(num: i32) -> i32{
+   let mut result: i32 = 0;
+   if( num > 40){
+    result = num * 1;
+   } else {
+    result = num * 2;
+   }
+   result
+}
 
 // Don't modify this function!
 #[test]
