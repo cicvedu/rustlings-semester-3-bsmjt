@@ -44,6 +44,11 @@ impl Default for Person {
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        let p = Person::from(s);
+        Person{
+            name: "1".to_string(),
+            age : "4".parse::<usize>().unwrap(),
+        }
     }
 }
 
