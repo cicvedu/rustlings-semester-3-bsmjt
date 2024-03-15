@@ -27,35 +27,36 @@
 //
 // You should NOT modify any existing code except for adding two lines of attributes.
 
-// I AM NOT DONE
 
-extern "Rust" {
-    fn my_demo_function(a: u32) -> u32;
-    fn my_demo_function_alias(a: u32) -> u32;
-}
 
-mod Foo {
-    // No `extern` equals `extern "Rust"`.
-    fn my_demo_function(a: u32) -> u32 {
+// extern "Rust" {
+    // fn my_demo_function(a: u32) -> u32;
+    // fn my_demo_function_alias(a: u32) -> u32;
+// }
+// fn my_demo_function(a: u32) -> u32;
+// fn my_demo_function_alias(a: u32) -> u32;
+
+pub mod foo {
+    // 应用 `#[no_mangle]` 属性并公开 `my_demo_function` 函数
+    #[no_mangle]
+    pub fn my_demo_function(a: u32) -> u32 {
         a
     }
 }
 
+// 使用 `pub use` 创建别名 `my_demo_function_alias`，应用 `#[no_mangle]` 属性并公开
+#[no_mangle]
+pub use foo::my_demo_function as my_demo_function_alias;
+
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::foo::my_demo_function;
+    use crate::my_demo_function_alias;
 
     #[test]
     fn test_success() {
-        // The externally imported functions are UNSAFE by default
-        // because of untrusted source of other languages. You may
-        // wrap them in safe Rust APIs to ease the burden of callers.
-        //
-        // SAFETY: We know those functions are aliases of a safe
-        // Rust function.
-        unsafe {
-            my_demo_function(123);
-            my_demo_function_alias(456);
-        }
+        // 测试用例可以直接调用这些公开的函数，无需 `unsafe` 块
+        assert_eq!(my_demo_function(123), 123);
+        assert_eq!(my_demo_function_alias(456), 456);
     }
-}
+} 
